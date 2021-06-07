@@ -1,0 +1,14 @@
+Package: libpam-rfid
+Version: 1.4
+Architecture: all
+Maintainer: Philipp Meisberger <team@pm-codeworks.de>
+Installed-Size: 50
+Depends: python:any (<< 2.8), python:any (>= 2.7~), python-argparse, libpam-python, python-rfid (>= 1.1), bash-completion
+Provides: pamrfid
+Section: admin
+Priority: optional
+Homepage: http://www.pm-codeworks.de/pamrfid.html
+Description: Pluggable Authentication Module for hardware authentication via RFID
+ A 125kHz UART compatible RFID reader is required to use this module. The
+ reader must be compatible with the EM4100 protocol. PAM RFID was developed
+ with the RDM6300 RFID reader.

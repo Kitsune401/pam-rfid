@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#! /usr/bin/python2
 # -*- coding: utf-8 -*-
 
 """
@@ -18,8 +18,7 @@ import ConfigParser
 
 from pamrfid import __version__ as VERSION
 from pamrfid import CONFIG_FILE
-#from pyrfid.pyrfid import PyRfid
-from keyboard_alike import reader
+from pyrfid.pyrfid import PyRfid
 
 
 class PamRfid(object):
@@ -57,12 +56,11 @@ class PamRfid(object):
 
         try:
             ## Gets connection values
-            #port = self.__config.get('PyRfid', 'port')
-            #baudRate = int(self.__config.get('PyRfid', 'baudRate'), 10)
+            port = self.__config.get('PyRfid', 'port')
+            baudRate = int(self.__config.get('PyRfid', 'baudRate'), 10)
 
             ## Tries to establish connection
-            #self.__rfid = PyRfid(port, baudRate)
-            self.__rfid = reader.Reader(0xffff, 0x0035, 84, 16, should_reset=False)
+            self.__rfid = PyRfid(port, baudRate)
 
         except Exception as e:
             print('[Exception] The RFID sensor could not be initialized: ' + str(e))
@@ -107,23 +105,17 @@ class PamRfid(object):
             ## Check if system user exists?
             pwd.getpwnam(userName)
 
-            self.__rfid.initialize()
-
             print('Waiting for tag...')
 
             ## Read out tag data
-            #if ( self.__rfid.read().strip() != True ):
-            #    raise Exception('User aborted!')
+            if ( self.__rfid.readTag() != True ):
+                raise Exception('User aborted!')
 
             ## Generates salt
             salt = uuid.uuid4().hex
 
-            tag = self.__rfid.read().strip()
-
             ## Calculates salted hash of tag
-            tagHash = hashlib.sha256(salt.encode() + tag).hexdigest()
-
-            self.__rfid.disconnect()
+            tagHash = hashlib.sha256(salt.encode() + self.__rfid.rawTag.encode()).hexdigest()
 
             ## The new user information list
             userData = (
@@ -218,27 +210,21 @@ class PamRfid(object):
 
         ## Tries to check RFID
         try:
-            self.__rfid.initialize()
-
             print('Waiting for tag...')
 
             ## Read out tag data
-            #if ( self.__rfid.readTag() != True ):
-            #    raise Exception('User aborted!')
+            if ( self.__rfid.readTag() != True ):
+                raise Exception('User aborted!')
 
             ## Show additional information
-            #print('------------------------')
-            #print('Tag ID:       ' + self.__rfid.tagId)
-            #print('Tag type:     ' + self.__rfid.tagType)
-            #print('------------------------')
-
-            tag = self.__rfid.read().strip()
+            print('------------------------')
+            print('Tag ID:       ' + self.__rfid.tagId)
+            print('Tag type:     ' + self.__rfid.tagType)
+            print('------------------------')
 
             ## Calculates hash of tag ID
             print('Calculating hash...')
-            tagHash = hashlib.sha256(salt.encode() + tag).hexdigest()
-
-            self.__rfid.disconnect()
+            tagHash = hashlib.sha256(salt.encode() + self.__rfid.rawTag.encode()).hexdigest()
 
             print('Checking if calculated hash matches stored hash...')
 

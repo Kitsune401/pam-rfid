@@ -1,0 +1,4 @@
+./debian/pam-auth-update/rfid
+./files/pam_rfid.py
+./files/pamrfid-conf
+./files/pamrfid.conf

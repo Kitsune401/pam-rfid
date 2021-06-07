@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: libpam-rfid
+Version: 1.4
+Summary: Linux Pluggable Authentication Module (PAM) for hardware authentication via RFID.
+Home-page: http://www.pm-codeworks.de/pamrfid.html
+Author: Philipp Meisberger
+Author-email: team@pm-codeworks.de
+License: D-FSL
+Description: UNKNOWN
+Platform: UNKNOWN

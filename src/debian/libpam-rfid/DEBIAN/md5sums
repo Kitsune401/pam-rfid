@@ -1,0 +1,12 @@
+f26fc3275b843e8208aa5176e4d4064d  lib/security/pam_rfid.py
+ec1fdab2b0e878bf6ed1ca1c6038b31a  usr/bin/pamrfid-conf
+87f01dd16686d8555726580dcad1bb36  usr/lib/python2.7/dist-packages/libpam_rfid-1.4.egg-info/PKG-INFO
+68b329da9893e34099c7d8ad5cb9c940  usr/lib/python2.7/dist-packages/libpam_rfid-1.4.egg-info/dependency_links.txt
+0a4bb87c21593f15c270c6a25f738e91  usr/lib/python2.7/dist-packages/libpam_rfid-1.4.egg-info/top_level.txt
+c00de86aa0b939ec9cbd32c06b7d1742  usr/lib/python2.7/dist-packages/pamrfid/__init__.py
+123c70b7c7553c2cf8314e1ace3a0315  usr/share/bash-completion/completions/pamrfid
+e4067a95cd269b89e88fae26fa575550  usr/share/doc/libpam-rfid/changelog.gz
+225a385545ca8bec01716131b5b010cf  usr/share/doc/libpam-rfid/copyright
+7f68f5fce8efca85eaa51ff92873c181  usr/share/lintian/overrides/libpam-rfid
+3c7e391b309b3bd116b67995566ab73e  usr/share/man/man1/pamrfid-conf.1.gz
+82655c59957a0e1c809b3dbe6605dedf  usr/share/pam-configs/rfid

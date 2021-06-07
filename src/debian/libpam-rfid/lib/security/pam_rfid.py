@@ -9,9 +9,6 @@ Copyright 2014 Philipp Meisberger <team@pm-codeworks.de>,
 All rights reserved.
 """
 
-import site
-site.main()
-
 import hashlib
 import uuid
 import syslog
@@ -20,8 +17,7 @@ import ConfigParser
 
 from pamrfid import __version__ as VERSION
 from pamrfid import CONFIG_FILE
-#from pyrfid.pyrfid import PyRfid
-from keyboard_alike import reader
+from pyrfid.pyrfid import PyRfid
 
 
 class UserUnknownException(Exception):
@@ -148,12 +144,11 @@ def pam_sm_authenticate(pamh, flags, argv):
     ## Initialize RFID sensor
     try:
         ## Gets RFID sensor connection values
-        #port = configParser.get('PyRfid', 'port')
-        #baudRate = int(configParser.get('PyRfid', 'baudRate'), 10)
+        port = configParser.get('PyRfid', 'port')
+        baudRate = int(configParser.get('PyRfid', 'baudRate'), 10)
 
         ## Tries to establish connection
-        rfid = reader.Reader(0xffff, 0x0035, 84, 16, should_reset=False)
-        rfid.initialize()
+        rfid = PyRfid(port, baudRate)
 
     except Exception as e:
         auth_log('The RFID sensor could not be initialized: ' + str(e), syslog.LOG_ERR)
@@ -166,15 +161,11 @@ def pam_sm_authenticate(pamh, flags, argv):
     ## Authentication progress
     try:
         ## Read out tag data
-        #if ( rfid.readTag() != True ):
-        #    raise Exception('User aborted!')
+        if ( rfid.readTag() != True ):
+            raise Exception('User aborted!')
 
         ## Hashs read tag
-        tag = rfid.read().split()
-        auth_log('RFID tag: ' + str(tag[0]), syslog.LOG_CRIT)
-        auth_log('RFID salt: ' + str(salt), syslog.LOG_CRIT)
-        tagHash = hashlib.sha256(str(salt.encode()) + tag[0]).hexdigest()
-        rfid.disconnect()
+        tagHash = hashlib.sha256(salt.encode() + rfid.rawTag.encode()).hexdigest()
 
         ## Checks if the read Hash matches the stored
         if ( tagHash == expectedTagHash ):
@@ -189,7 +180,6 @@ def pam_sm_authenticate(pamh, flags, argv):
     except Exception as e:
         auth_log('RFID read failed: ' + str(e), syslog.LOG_CRIT)
         showPAMTextMessage(pamh, 'Access denied!', True)
-        rfid.disconnect()
         return pamh.PAM_AUTH_ERR
 
     ## Denies for default

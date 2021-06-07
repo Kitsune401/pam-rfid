@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+
+## Adds PAM configuration to "/etc/pam.d/common-auth":
+pam-auth-update --package rfid
+
+
+# Automatically added by dh_python2:
+if which pycompile >/dev/null 2>&1; then
+	pycompile -p libpam-rfid 
+fi
+
+# End automatically added section
+
+exit 0
