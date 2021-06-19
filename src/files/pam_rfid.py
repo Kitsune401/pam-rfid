@@ -20,7 +20,6 @@ import ConfigParser
 
 from pamrfid import __version__ as VERSION
 from pamrfid import CONFIG_FILE
-#from pyrfid.pyrfid import PyRfid
 from keyboard_alike import reader
 
 
@@ -148,11 +147,11 @@ def pam_sm_authenticate(pamh, flags, argv):
     ## Initialize RFID sensor
     try:
         ## Gets RFID sensor connection values
-        #port = configParser.get('PyRfid', 'port')
-        #baudRate = int(configParser.get('PyRfid', 'baudRate'), 10)
+        vendorID = int(configParser.get('PyRfid', 'vendorID'), 16)
+        productID = int(configParser.get('PyRfid', 'productID'), 16)
 
         ## Tries to establish connection
-        rfid = reader.Reader(0xffff, 0x0035, 84, 16, should_reset=False)
+        rfid = reader.Reader(vendorID, productID, 84, 16, should_reset=False)
         rfid.initialize()
 
     except Exception as e:
@@ -165,14 +164,9 @@ def pam_sm_authenticate(pamh, flags, argv):
 
     ## Authentication progress
     try:
-        ## Read out tag data
-        #if ( rfid.readTag() != True ):
-        #    raise Exception('User aborted!')
-
         ## Hashs read tag
         tag = rfid.read().split()
-        auth_log('RFID tag: ' + str(tag[0]), syslog.LOG_CRIT)
-        auth_log('RFID salt: ' + str(salt), syslog.LOG_CRIT)
+
         tagHash = hashlib.sha256(str(salt.encode()) + tag[0]).hexdigest()
         rfid.disconnect()
 

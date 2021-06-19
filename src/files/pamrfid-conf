@@ -18,7 +18,6 @@ import ConfigParser
 
 from pamrfid import __version__ as VERSION
 from pamrfid import CONFIG_FILE
-#from pyrfid.pyrfid import PyRfid
 from keyboard_alike import reader
 
 
@@ -57,12 +56,11 @@ class PamRfid(object):
 
         try:
             ## Gets connection values
-            #port = self.__config.get('PyRfid', 'port')
-            #baudRate = int(self.__config.get('PyRfid', 'baudRate'), 10)
+            vendorID = int(self.__config.get('PyRfid', 'vendorID'), 16)
+            productID = int(self.__config.get('PyRfid', 'productID'), 16)
 
             ## Tries to establish connection
-            #self.__rfid = PyRfid(port, baudRate)
-            self.__rfid = reader.Reader(0xffff, 0x0035, 84, 16, should_reset=False)
+            self.__rfid = reader.Reader(vendorID, productID, 84, 16, should_reset=False)
 
         except Exception as e:
             print('[Exception] The RFID sensor could not be initialized: ' + str(e))
@@ -110,10 +108,6 @@ class PamRfid(object):
             self.__rfid.initialize()
 
             print('Waiting for tag...')
-
-            ## Read out tag data
-            #if ( self.__rfid.read().strip() != True ):
-            #    raise Exception('User aborted!')
 
             ## Generates salt
             salt = uuid.uuid4().hex
@@ -221,16 +215,6 @@ class PamRfid(object):
             self.__rfid.initialize()
 
             print('Waiting for tag...')
-
-            ## Read out tag data
-            #if ( self.__rfid.readTag() != True ):
-            #    raise Exception('User aborted!')
-
-            ## Show additional information
-            #print('------------------------')
-            #print('Tag ID:       ' + self.__rfid.tagId)
-            #print('Tag type:     ' + self.__rfid.tagType)
-            #print('------------------------')
 
             tag = self.__rfid.read().strip()
 
